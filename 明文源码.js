@@ -1216,16 +1216,25 @@ async function getTemplate() {
         const encodedTemplate = await response.text();
         const template = atob(encodedTemplate);  // 解码 Base64
 
-        // 使用模板字符串执行
-        const 节点配置页 = new Function('proxyhost', 'hostName', 'uuid', 'FileName',
-            'userID', 'fakeUserID', 'UA', '订阅器', 'v2ray', 'clash', 'cmad', '动态UUID信息',
-            `return \`${template}\`;`
-        )(proxyhost, hostName, uuid, FileName, userID, fakeUserID, UA, 订阅器, v2ray, clash, cmad, 动态UUID信息);
-
-        return 节点配置页;
+        // 直接替换变量，不使用 new Function
+        return template
+            .replace(/\${proxyhost}/g, proxyhost)
+            .replace(/\${hostName}/g, hostName)
+            .replace(/\${uuid}/g, uuid)
+            .replace(/\${FileName}/g, FileName)
+            .replace(/\${动态UUID信息}/g, 动态UUID信息)
+            .replace(/\${userID}/g, userID)
+            .replace(/\${fakeUserID}/g, fakeUserID)
+            .replace(/\${UA}/g, UA)
+            .replace(/\${订阅器}/g, 订阅器)
+            .replace(/\${v2ray}/g, v2ray)
+            .replace(/\${clash}/g, clash)
+            .replace(/\${cmad}/g, cmad)
+            .replace(/\${atob\('([^']+)'\)}/g, (match, p1) => atob(p1)); // 处理 atob 调用
     } catch (error) {
         console.error('Template loading error:', error);
-        return '加载模板失败';
+        console.error('Error details:', error.stack);
+        return '加载模板失败: ' + error.message;
     }
 }
 
