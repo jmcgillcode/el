@@ -1363,177 +1363,342 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
 		else 订阅器 += `<br>SUBAPI（订阅转换后端）: ${subProtocol}://${subConverter}<br>SUBCONFIG（订阅转换配置文件）: ${subConfig}`;
 		const 动态UUID信息 = (uuid != userID) ? `TOKEN: ${uuid}<br>UUIDNow: ${userID}<br>UUIDLow: ${userIDLow}<br>${userIDTime}TIME（动态UUID有效时间）: ${有效时间} 天<br>UPTIME（动态UUID更新时间）: ${更新时间} 时（北京时间）<br><br>` : `${userIDTime}`;
 		const 节点配置页 = `
-<div class="container p-4">
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Subscribe / sub 订阅地址</h5>
-        </div>
-        <div class="card-body">
-            <!-- 订阅地址部分 -->
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <div class="subscription-item mb-4">
-                        <h6 class="text-muted">自适应订阅地址:</h6>
-                        <a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sub','qrcode_0')" 
-                           class="btn btn-outline-primary btn-sm text-break">
-                            https://${proxyhost}${hostName}/${uuid}
-                        </a>
-                        <div id="qrcode_0" class="mt-3"></div>
-                    </div>
-                    
-                    <div class="subscription-item mb-4">
-                        <h6 class="text-muted">Base64订阅地址:</h6>
-                        <a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?b64','qrcode_1')" 
-                           class="btn btn-outline-primary btn-sm text-break">
-                            https://${proxyhost}${hostName}/${uuid}?b64
-                        </a>
-                        <div id="qrcode_1" class="mt-3"></div>
-                    </div>
-                </div>
-                
-                <div class="col-md-6">
-                    <div class="subscription-item mb-4">
-                        <h6 class="text-muted">clash订阅地址:</h6>
-                        <a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?clash','qrcode_2')" 
-                           class="btn btn-outline-primary btn-sm text-break">
-                            https://${proxyhost}${hostName}/${uuid}?clash
-                        </a>
-                        <div id="qrcode_2" class="mt-3"></div>
-                    </div>
-                    
-                    <div class="subscription-item mb-4">
-                        <h6 class="text-muted">singbox订阅地址:</h6>
-                        <a href="javascript:void(0)" onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sb','qrcode_3')" 
-                           class="btn btn-outline-primary btn-sm text-break">
-                            https://${proxyhost}${hostName}/${uuid}?sb
-                        </a>
-                        <div id="qrcode_3" class="mt-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 实用订阅技巧部分 -->
-            <div class="tips-section">
-                <button class="btn btn-info btn-sm mb-3" onclick="toggleNotice()" id="noticeToggle">
-                    实用订阅技巧 ∨
-                </button>
-                <div id="noticeContent" class="card p-3" style="display: none;">
-                    <ol class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>PassWall、SSR+ 用户注意：</strong>
-                            推荐使用 <span class="badge bg-primary">Base64订阅地址</span> 进行订阅
-                        </li>
-                        <li class="list-group-item">
-                            <strong>快速切换订阅生成器：</strong>
-                            <a href='${atob('aHR0cHM6Ly9naXRodWIuY29tL2NtbGl1L1dvcmtlclZsZXNzMnN1Yg==')}' class="text-decoration-none">
-                                优选订阅生成器
-                            </a>
-                            <div class="mt-2">
-                                <code>https://${proxyhost}${hostName}/${uuid}?sub=sub.google.com</code>
-                            </div>
-                        </li>
-                        <!-- 其他技巧项目 -->
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 配置信息卡片 -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-info text-white">
-            <h5 class="mb-0">${FileName} 配置信息</h5>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>HOST:</strong> ${hostName}</p>
-                    <p><strong>UUID:</strong> ${userID}</p>
-                    <p><strong>FKID:</strong> ${fakeUserID}</p>
-                </div>
-                <div class="col-md-6">
-                    <p><strong>UA:</strong> ${UA}</p>
-                    <p>${订阅器}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- V2Ray 配置卡片 -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">V2Ray 配置</h5>
-        </div>
-        <div class="card-body">
-            <a href="javascript:void(0)" onclick="copyToClipboard('${v2ray}','qrcode_v2ray')" 
-               class="btn btn-outline-success btn-sm text-break">
-                ${v2ray}
-            </a>
-            <div id="qrcode_v2ray" class="mt-3"></div>
-        </div>
-    </div>
-
-    <!-- Clash Meta 配置卡片 -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-warning">
-            <h5 class="mb-0">Clash Meta 配置</h5>
-        </div>
-        <div class="card-body">
-            <pre class="bg-light p-3 rounded">${clash}</pre>
-        </div>
-    </div>
-
-    <!-- 额外信息 -->
-    <div class="mt-4 text-muted">
-        ${cmad}
-    </div>
-
+<!DOCTYPE html>
+<div class="subscription-page">
     <!-- 引入必要的 CSS 和 JS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        .subscription-page {
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 30px rgba(0,0,0,0.1);
+        }
+        .subscription-link {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .subscription-link:hover {
+            background: #f8f9fa;
+        }
+        .qr-code-container {
+            display: none;
+            transition: all 0.3s;
+        }
+        .copy-btn {
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+        .nav-pills .nav-link {
+            border-radius: 10px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            transition: all 0.2s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+        }
+        @media (max-width: 768px) {
+            .subscription-page {
+                padding: 10px;
+            }
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+
+    <!-- 主要内容区域 -->
+    <div class="container-fluid">
+        <!-- 顶部导航 -->
+        <ul class="nav nav-pills mb-4 justify-content-center animate__animated animate__fadeIn" id="subscriptionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#subscriptions">
+                    <i class="bi bi-link-45deg"></i> 订阅链接
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#configuration">
+                    <i class="bi bi-gear"></i> 配置信息
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#advanced">
+                    <i class="bi bi-sliders"></i> 高级选项
+                </button>
+            </li>
+        </ul>
+
+        <!-- 内容区域 -->
+        <div class="tab-content animate__animated animate__fadeIn">
+            <!-- 订阅链接面板 -->
+            <div class="tab-pane fade show active" id="subscriptions">
+                <div class="row">
+                    <!-- 自适应订阅 -->
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-broadcast"></i> 自适应订阅
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="subscription-link">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <small class="text-muted">点击复制链接</small>
+                                        <button class="btn btn-sm btn-outline-primary copy-btn" 
+                                                onclick="copyToClipboard('https://${proxyhost}${hostName}/${uuid}?sub', 'qrcode_0')">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-break small">
+                                        https://${proxyhost}${hostName}/${uuid}?sub
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <button class="btn btn-sm btn-light" onclick="toggleQR('qrcode_0')">
+                                            <i class="bi bi-qr-code"></i> 显示二维码
+                                        </button>
+                                    </div>
+                                    <div id="qrcode_0" class="qr-code-container mt-3 text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Base64订阅 -->
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-code-square"></i> Base64订阅
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- 类似的结构 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clash订阅 -->
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-shield-check"></i> Clash订阅
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- 类似的结构 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Singbox订阅 -->
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-box"></i> Singbox订阅
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- 类似的结构 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配置信息面板 -->
+            <div class="tab-pane fade" id="configuration">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">基本信息</h5>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <th>HOST:</th>
+                                        <td>${hostName}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>UUID:</th>
+                                        <td>${userID}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>FKID:</th>
+                                        <td>${fakeUserID}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>UA:</th>
+                                        <td>${UA}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">V2Ray 配置</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <button class="btn btn-outline-primary copy-btn" 
+                                            onclick="copyToClipboard('${v2ray}','qrcode_v2ray')">
+                                        <i class="bi bi-clipboard"></i> 复制配置
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="toggleQR('qrcode_v2ray')">
+                                        <i class="bi bi-qr-code"></i> 二维码
+                                    </button>
+                                </div>
+                                <div id="qrcode_v2ray" class="qr-code-container mt-3 text-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 高级选项面板 -->
+            <div class="tab-pane fade" id="advanced">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">实用订阅技巧</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="tipsAccordion">
+                            <!-- 技巧 1 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tip1">
+                                        PassWall、SSR+ 用户推荐配置
+                                    </button>
+                                </h2>
+                                <div id="tip1" class="accordion-collapse collapse show" data-bs-parent="#tipsAccordion">
+                                    <div class="accordion-body">
+                                        推荐使用 <span class="badge bg-primary">Base64订阅地址</span> 进行订阅
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 其他技巧项 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知容器 -->
+    <div class="toast-container"></div>
+
+    <!-- 引入必要的 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
+    
     <script>
-        function copyToClipboard(text, qrcode) {
+        // 复制到剪贴板
+        function copyToClipboard(text, qrcodeId) {
             navigator.clipboard.writeText(text).then(() => {
-                showToast('已复制到剪贴板');
+                showToast('复制成功', 'success');
             }).catch(err => {
                 console.error('复制失败:', err);
-                showToast('复制失败，请手动复制');
+                showToast('复制失败，请手动复制', 'error');
             });
             
-            const qrcodeDiv = document.getElementById(qrcode);
-            qrcodeDiv.innerHTML = '';
-            new QRCode(qrcodeDiv, {
-                text: text,
-                width: 220,
-                height: 220,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.Q,
-                scale: 1
-            });
-        }
-
-        function toggleNotice() {
-            const noticeContent = document.getElementById('noticeContent');
-            const noticeToggle = document.getElementById('noticeToggle');
-            if (noticeContent.style.display === 'none') {
-                noticeContent.style.display = 'block';
-                noticeToggle.textContent = '实用订阅技巧 ∧';
-            } else {
-                noticeContent.style.display = 'none';
-                noticeToggle.textContent = '实用订阅技巧 ∨';
+            // 生成二维码
+            const qrcodeDiv = document.getElementById(qrcodeId);
+            if (!qrcodeDiv.hasAttribute('data-qr-generated')) {
+                qrcodeDiv.innerHTML = '';
+                new QRCode(qrcodeDiv, {
+                    text: text,
+                    width: 200,
+                    height: 200,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H,
+                });
+                qrcodeDiv.setAttribute('data-qr-generated', 'true');
             }
         }
 
-        // 添加一个简单的 Toast 通知
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'position-fixed top-50 start-50 translate-middle bg-dark text-white px-4 py-2 rounded';
-            toast.style.zIndex = '1000';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+        // 显示/隐藏二维码
+        function toggleQR(qrcodeId) {
+            const qrcodeDiv = document.getElementById(qrcodeId);
+            const isHidden = qrcodeDiv.style.display === 'none' || !qrcodeDiv.style.display;
+            qrcodeDiv.style.display = isHidden ? 'block' : 'none';
         }
+
+        // 显示 Toast 通知
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0 animate__animated animate__fadeInRight`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            document.querySelector('.toast-container').appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast, {
+                animation: true,
+                autohide: true,
+                delay: 3000
+            });
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化所有工具提示
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
     </script>
 </div>
 `;
