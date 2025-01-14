@@ -1210,14 +1210,23 @@ function 配置信息(UUID, 域名地址) {
 }
 
 
-async function getTemplate(variables) {
-    const response = await fetch('https://raw.githubusercontent.com/jmcgillcode/el/refs/heads/main/node-template.txt');
-    const templateText = await response.text();
+async function getTemplate() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/jmcgillcode/el/refs/heads/main/template.txt');
+        const encodedTemplate = await response.text();
+        const template = atob(encodedTemplate);  // 解码 Base64
 
-    // 替换所有变量
-    return templateText.replace(/\${(\w+)}/g, (match, variable) => {
-        return variables[variable] || match;
-    });
+        // 使用模板字符串执行
+        const 节点配置页 = new Function('proxyhost', 'hostName', 'uuid', 'FileName',
+            'userID', 'fakeUserID', 'UA', '订阅器', 'v2ray', 'clash', 'cmad', '动态UUID信息',
+            `return \`${template}\`;`
+        )(proxyhost, hostName, uuid, FileName, userID, fakeUserID, UA, 订阅器, v2ray, clash, cmad, 动态UUID信息);
+
+        return 节点配置页;
+    } catch (error) {
+        console.error('Template loading error:', error);
+        return '加载模板失败';
+    }
 }
 
 let subParams = ['sub', 'base64', 'b64', 'clash', 'singbox', 'sb'];
@@ -1375,20 +1384,7 @@ async function 生成配置信息(userID, hostName, sub, UA, RproxyIP, _url, fak
         if (动态UUID && _url.pathname !== `/${动态UUID}`) 订阅器 = '';
         else 订阅器 += `<br>SUBAPI（订阅转换后端）: ${subProtocol}://${subConverter}<br>SUBCONFIG（订阅转换配置文件）: ${subConfig}`;
         const 动态UUID信息 = (uuid != userID) ? `TOKEN: ${uuid}<br>UUIDNow: ${userID}<br>UUIDLow: ${userIDLow}<br>${userIDTime}TIME（动态UUID有效时间）: ${有效时间} 天<br>UPTIME（动态UUID更新时间）: ${更新时间} 时（北京时间）<br><br>` : `${userIDTime}`;
-        const 节点配置页 = await getTemplate({
-            proxyhost,
-            hostName,
-            uuid,
-            FileName,
-            动态UUID信息,
-            userID,
-            fakeUserID,
-            UA,
-            订阅器,
-            v2ray,
-            clash,
-            cmad
-        });
+        const 节点配置页 = await getTemplate();
         return 节点配置页;
     } else {
         if (typeof fetch != 'function') {
