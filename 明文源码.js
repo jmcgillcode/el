@@ -1209,11 +1209,15 @@ function 配置信息(UUID, 域名地址) {
 	return [威图瑞, 猫猫猫];
 }
 
+
+
 async function getTemplate() {
     const response = await fetch('https://raw.githubusercontent.com/jmcgillcode/el/refs/heads/main/node-template.txt');
-    const template = await response.text();
-
-    const 节点配置页 = template;  // 直接使用模板
+    const templateText = await response.text();
+    
+    // 关键是这里，使用反引号创建模板字符串
+    const 节点配置页 = `${templateText}`;
+    
     return 节点配置页;
 }
 
