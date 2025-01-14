@@ -1184,30 +1184,25 @@ async function getNodeConfigPage(params) {
     try {
         const response = await fetch('https://raw.githubusercontent.com/jmcgillcode/el/refs/heads/main/node-config.html');
         let template = await response.text();
-
-        // 替换模板变量
-        const replacements = {
-            '{{proxyhost}}': params.proxyhost,
-            '{{hostName}}': params.hostName,
-            '{{uuid}}': params.uuid,
-            '{{FileName}}': params.FileName,
-            '{{动态UUID信息}}': params.动态UUID信息,
-            '{{userID}}': params.userID,
-            '{{fakeUserID}}': params.fakeUserID,
-            '{{UA}}': params.UA,
-            '{{订阅器}}': params.订阅器,
-            '{{v2ray}}': params.v2ray,
-            '{{clash}}': params.clash,
-            '{{cmad}}': params.cmad
-        };
-
-        Object.keys(replacements).forEach(key => {
-            template = template.replace(new RegExp(key, 'g'), replacements[key]);
-        });
+        
+        // 替换所有变量
+        template = template
+            .replace(/\{\{proxyhost\}\}/g, params.proxyhost)
+            .replace(/\{\{hostName\}\}/g, params.hostName)
+            .replace(/\{\{uuid\}\}/g, params.uuid)
+            .replace(/\{\{FileName\}\}/g, params.FileName)
+            .replace(/\{\{动态UUID信息\}\}/g, params.动态UUID信息)
+            .replace(/\{\{userID\}\}/g, params.userID)
+            .replace(/\{\{fakeUserID\}\}/g, params.fakeUserID)
+            .replace(/\{\{UA\}\}/g, params.UA)
+            .replace(/\{\{订阅器\}\}/g, params.订阅器)
+            .replace(/\{\{v2ray\}\}/g, params.v2ray)
+            .replace(/\{\{clash\}\}/g, params.clash)
+            .replace(/\{\{cmad\}\}/g, params.cmad);
 
         return template;
     } catch (error) {
-        console.error('Failed to load node config template:', error);
+        console.error('Failed to load template:', error);
         return '加载配置页面失败';
     }
 }
